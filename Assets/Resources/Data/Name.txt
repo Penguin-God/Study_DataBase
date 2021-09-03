@@ -1,0 +1,22 @@
+{
+    "one": [
+        "하!",
+        "마!"
+    ],
+    "two": [
+        {
+            "type": "Character",
+            "name": "Pig",
+            "explain": "돼지",
+            "number": "1",
+            "isUsing": false
+        },
+        {
+            "type": "Character",
+            "name": "Creeper",
+            "explain": "크리퍼",
+            "number": "1",
+            "isUsing": false
+        }
+    ]
+}
