@@ -1,9 +1,5 @@
 {
-    "one": [
-        "하!",
-        "마!"
-    ],
-    "two": [
+    "list": [
         {
             "type": "Character",
             "name": "Pig",
@@ -15,6 +11,34 @@
             "type": "Character",
             "name": "Creeper",
             "explain": "크리퍼",
+            "number": "1",
+            "isUsing": false
+        },
+        {
+            "type": "Character",
+            "name": "Bee",
+            "explain": "벌",
+            "number": "1",
+            "isUsing": false
+        },
+        {
+            "type": "Balloon",
+            "name": "RedBalloon",
+            "explain": "빨간풍선",
+            "number": "1",
+            "isUsing": false
+        },
+        {
+            "type": "Balloon",
+            "name": "GreenBalloon",
+            "explain": "초록풍선",
+            "number": "1",
+            "isUsing": false
+        },
+        {
+            "type": "Balloon",
+            "name": "BlueBalloon",
+            "explain": "파란풍선",
             "number": "1",
             "isUsing": false
         }

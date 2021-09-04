@@ -4,6 +4,17 @@ using UnityEngine;
 using System.IO;
 
 [System.Serializable]
+public class Serialization<T1>
+{
+    public Serialization(List<T1> p_List)
+    {
+        list = p_List;
+    }
+
+    public List<T1> list;
+}
+
+[System.Serializable]
 public class ItemData
 {
     // 생산자 : 이름이 클래스와 같은 매서드
@@ -16,22 +27,15 @@ public class ItemData
     public bool isUsing;
 }
 
-[System.Serializable]
-public class Serialization<T1, T2>
-{
-    public Serialization(List<T1> p_One, List<T2> p_Two)
-    {
-        one = p_One;
-        two = p_Two;
-    }
-    public List<T1> one;
-    public List<T2> two;
-
-}
-
 
 public class DataBaseManager : MonoBehaviour
 {
+    public static DataBaseManager instance;
+    private void Awake()
+    {
+        if (instance == null) instance = this;
+    }
+
     [SerializeField] TextAsset itemDataBase;
     public List<ItemData> itemDataList, MyItemList = new List<ItemData>();
 
@@ -46,53 +50,76 @@ public class DataBaseManager : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        SaveFile();
-        LoadFile();
-    }
-
-    public List<string> names = new List<string>();
-    public List<ItemData> datas = new List<ItemData>();
-    public Dictionary<string, ItemData> dataDic = new Dictionary<string, ItemData>();
-
+    [ContextMenu("SaveFile")]
     void SaveFile()
     {
-        names.Add("하!");
-        names.Add("마!");
-        datas.Add(itemDataList[0]);
-        datas.Add(itemDataList[1]);
-
-        //string jsonData = JsonUtility.ToJson(new Serialization<string, ItemData>(dataDic));
-
-        string jsonData = JsonUtility.ToJson(new Serialization<string, ItemData>(names, datas), true);
-        //for (int i = 0; i < itemDataList.Count; i++)
-        //{
-        //    jsonData +=  i + "name : " + JsonUtility.ToJson(itemDataList[i], true);
-        //}
+        string jsonData = JsonUtility.ToJson(new Serialization<ItemData>(itemDataList), true);
         string path = Path.Combine(Application.dataPath, "Resources", "Data", "Name.txt");
         File.WriteAllText(path, jsonData);
-
     }
 
-    public List<string> dicList;
-
+    [ContextMenu("LoadFile")]
     void LoadFile()
     {
         string path = Path.Combine(Application.dataPath, "Resources", "Data", "Name.txt");
         string jsonData = File.ReadAllText(path);
-        dicList = JsonUtility.FromJson<Serialization<string, ItemData>>(jsonData).one;
-        MyItemList = JsonUtility.FromJson <Serialization<string, ItemData>> (jsonData).two;
-
-        for(int i = 0; i < dicList.Count; i++)
-        {
-            dataDic.Add(dicList[i], MyItemList[i]);
-        }
-
-        foreach(string key in dataDic.Keys)
-        {
-            Debug.Log(key);
-            Debug.Log(dataDic[key]);
-        }
+        MyItemList = JsonUtility.FromJson <Serialization<ItemData>> (jsonData).list;
     }
 }
+
+
+// 딕셔너리 파싱하는 코드
+
+//[System.Serializable]
+//public class Serialization<T1, T2>
+//{
+//    public Serialization(List<T1> p_One, List<T2> p_Two)
+//    {
+//        one = p_One;
+//        two = p_Two;
+//    }
+//    public List<T1> one;
+//    public List<T2> two;
+
+//}
+
+//public List<string> names = new List<string>();
+//public List<ItemData> datas = new List<ItemData>();
+//public Dictionary<string, ItemData> dataDic = new Dictionary<string, ItemData>();
+
+//void SaveFile()
+//{
+//    names.Add("하!");
+//    names.Add("마!");
+//    datas.Add(itemDataList[0]);
+//    datas.Add(itemDataList[1]);
+
+//    //string jsonData = JsonUtility.ToJson(new Serialization<string, ItemData>(dataDic));
+
+//    string jsonData = JsonUtility.ToJson(new Serialization<string, ItemData>(names, datas), true);
+//    string path = Path.Combine(Application.dataPath, "Resources", "Data", "Name.txt");
+//    File.WriteAllText(path, jsonData);
+
+//}
+
+
+//public List<string> dicList;
+
+//void LoadFile()
+//{
+//    string path = Path.Combine(Application.dataPath, "Resources", "Data", "Name.txt");
+//    string jsonData = File.ReadAllText(path);
+//    dicList = JsonUtility.FromJson<Serialization<string, ItemData>>(jsonData).one;
+//    MyItemList = JsonUtility.FromJson<Serialization<string, ItemData>>(jsonData).two;
+
+//    for (int i = 0; i < dicList.Count; i++)
+//    {
+//        dataDic.Add(dicList[i], MyItemList[i]);
+//    }
+
+//    foreach (string key in dataDic.Keys)
+//    {
+//        Debug.Log(key);
+//        Debug.Log(dataDic[key]);
+//    }
+//}
