@@ -53,7 +53,7 @@ public class DataBaseManager : MonoBehaviour
     [ContextMenu("SaveFile")]
     void SaveFile()
     {
-        string jsonData = JsonUtility.ToJson(new Serialization<ItemData>(itemDataList), true);
+        string jsonData = JsonUtility.ToJson(new Serialization<ItemData>(MyItemList), true);
         string path = Path.Combine(Application.dataPath, "Resources", "Data", "Name.txt");
         File.WriteAllText(path, jsonData);
     }
