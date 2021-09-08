@@ -8,7 +8,7 @@ public class SlotManager : MonoBehaviour
     public string currentTabName = "Character";
     public List<ItemData> showItemList = new List<ItemData>();
 
-    [SerializeField] GameObject[] slots;
+    [SerializeField] GameObject[] slots = null;
     private void Start()
     {
         TabClick(currentTabName);
@@ -21,17 +21,14 @@ public class SlotManager : MonoBehaviour
         // 여기서 가져온 리스트는 같은 주소값을 참조함 (Return한 리스트의 값을 바꾸면 원본 리스트의 값도 바뀌고 반대도 됨)
         showItemList = DataBaseManager.instance.MyItemList.FindAll(itemData => itemData.type == tabName);
 
-        for(int i = 0; i < showItemList.Count; i++)
-        {
-            slots[i].SetActive(true);
-            slots[i].GetComponentInChildren<Text>().text = showItemList[i].name + "/" + showItemList[i].isUsing;
-        }
-
+        UpdateSlot();
         SetTabSprite();
     }
 
-    [SerializeField] Image[] tabImgs;
-    [SerializeField] Sprite[] selectConditionSprites;
+
+
+    [SerializeField] Image[] tabImgs = null;
+    [SerializeField] Sprite[] selectConditionSprites = null;
     void SetTabSprite()
     {
         int currentTabNumber = -1;
@@ -65,6 +62,38 @@ public class SlotManager : MonoBehaviour
             if (using_Item != null) using_Item.isUsing = false;
         }
 
-        TabClick(currentTabName); // 변경사항 적용
+        UpdateSlot();
+    }
+
+    [SerializeField] Sprite[] arr_ItemSprite = null;
+    [SerializeField] GameObject[] arr_UsingImage = null;
+    [SerializeField] Image[] arr_ItemImage = null;
+    public void UpdateSlot()
+    {
+        for (int i = 0; i < showItemList.Count; i++)
+        {
+            slots[i].SetActive(true);
+            arr_UsingImage[i].SetActive(showItemList[i].isUsing);
+            slots[i].GetComponentInChildren<Text>().text = showItemList[i].name;
+            // MyItemList에서 인덱스를 이미지에 해당하는 인덱스를 찾아 MyItemList과 크기가 같은 스프라이트 배열에 대입
+            arr_ItemImage[i].sprite = arr_ItemSprite[DataBaseManager.instance.MyItemList.FindIndex(data => data.name == showItemList[i].name)];
+        }
+    }
+
+    [Space][Space]
+    [SerializeField] GameObject explainPanel = null;
+    Coroutine Co_PointerEnter = null;
+    public void PointerEnter(int number) => Co_PointerEnter = StartCoroutine(PointerEnterDelay(number));
+
+    IEnumerator PointerEnterDelay(int number)
+    {
+        yield return new WaitForSeconds(0.5f);
+        explainPanel.SetActive(true);
+    }
+
+    public void PointerEXit(int number)
+    {
+        StopCoroutine(Co_PointerEnter);
+        explainPanel.SetActive(false);
     }
 }

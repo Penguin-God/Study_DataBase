@@ -36,7 +36,7 @@ public class DataBaseManager : MonoBehaviour
         if (instance == null) instance = this;
     }
 
-    [SerializeField] TextAsset itemDataBase;
+    [SerializeField] TextAsset itemDataBase = null;
     public List<ItemData> itemDataList, MyItemList = new List<ItemData>();
 
     [ContextMenu("Set Slot List")]
