@@ -70,13 +70,16 @@ public class SlotManager : MonoBehaviour
     [SerializeField] Image[] arr_ItemImage = null;
     public void UpdateSlot()
     {
+        currentItemList = DataBaseManager.instance.MyItemList.FindAll(itemData => itemData.type == currentTabName);
+        for (int i = 0; i < slots.Length; i++) slots[i].SetActive(false);
+
         for (int i = 0; i < currentItemList.Count; i++)
         {
             slots[i].SetActive(true);
             arr_UsingImage[i].SetActive(currentItemList[i].isUsing);
             slots[i].GetComponentInChildren<Text>().text = currentItemList[i].name;
             // MyItemList에서 인덱스를 이미지에 해당하는 인덱스를 찾아 MyItemList과 크기가 같은 스프라이트 배열에 대입
-            arr_ItemImage[i].sprite = arr_ItemSprite[DataBaseManager.instance.MyItemList.FindIndex(data => data.name == currentItemList[i].name)];
+            arr_ItemImage[i].sprite = arr_ItemSprite[DataBaseManager.instance.itemDataList.FindIndex(data => data.name == currentItemList[i].name)];
         }
     }
 
@@ -113,11 +116,11 @@ public class SlotManager : MonoBehaviour
         txt_ItemName.text = currentItemList[slotNum].name;
         txt_ItemCount.text = currentItemList[slotNum].number + "개";
         txt_ItemExplain.text = currentItemList[slotNum].explain;
-        img_Panel.sprite = arr_ItemSprite[DataBaseManager.instance.MyItemList.FindIndex(data => data.name == currentItemList[slotNum].name)];
+        img_Panel.sprite = arr_ItemSprite[DataBaseManager.instance.itemDataList.FindIndex(data => data.name == currentItemList[slotNum].name)];
 
     }
 
-    public void PointerEXit(int number)
+    public void PointerExit()
     {
         StopCoroutine(Co_PointerEnter);
         explainPanel.SetActive(false);

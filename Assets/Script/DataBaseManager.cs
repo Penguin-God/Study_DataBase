@@ -34,6 +34,7 @@ public class DataBaseManager : MonoBehaviour
     private void Awake()
     {
         if (instance == null) instance = this;
+        LoadFile();
     }
 
     [SerializeField] TextAsset itemDataBase = null;
@@ -51,7 +52,7 @@ public class DataBaseManager : MonoBehaviour
     }
 
     [ContextMenu("SaveFile")]
-    void SaveFile()
+    public void SaveFile()
     {
         string jsonData = JsonUtility.ToJson(new Serialization<ItemData>(MyItemList), true);
         string path = Path.Combine(Application.dataPath, "Resources", "Data", "Name.txt");
