@@ -99,7 +99,7 @@ public class SlotManager : MonoBehaviour
         RectTransform panelRect = explainPanel.GetComponent<RectTransform>();
         while (true)
         {
-            // 마우스 포지션에 사용되는 좌표계( (0,0)부터 해상도 크기까지 값을 가지는 사각형)를 Canvas좌표계(가운데가 (0,0)인 사각형 좌표계)로 바꾸는 작업
+            // 마우스 포지션에 사용되는 좌표계( (0,0)부터 해상도 크기까지 값을 가지는 사각형)를 Canvas좌표계(가운데가 (0,0)인 사각형 좌표계)로 바꾸는 코드
             RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, Input.mousePosition, Camera.main, out Vector2 panelPos);
             panelRect.anchoredPosition = panelPos + distance_PanelBetweenMouse;
             yield return null;

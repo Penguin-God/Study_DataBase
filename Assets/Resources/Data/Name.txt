@@ -2,14 +2,6 @@
     "list": [
         {
             "type": "Character",
-            "name": "Pig",
-            "explain": "돼지",
-            "number": "3",
-            "index": 0,
-            "isUsing": false
-        },
-        {
-            "type": "Character",
             "name": "Creeper",
             "explain": "크리퍼",
             "number": "2",

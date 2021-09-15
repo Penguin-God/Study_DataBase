@@ -39,17 +39,28 @@ public class DataBaseManager : MonoBehaviour
     }
 
     [SerializeField] TextAsset itemDataBase = null;
-    public List<ItemData> itemDataList, MyItemList = new List<ItemData>();
+    public List<ItemData> itemDataList
+    {
+        get
+        {
+            return ItemDataList;
+        }
+    }
+    [SerializeField] private List<ItemData> ItemDataList = new List<ItemData>();
+    public List<ItemData> MyItemList = new List<ItemData>();
 
     [ContextMenu("Set Slot List")]
     void SetSlotData()
     {
+        List<ItemData> newList = new List<ItemData>();
         string[] line = itemDataBase.text.Split('\n');
         for (int i = 0; i < line.Length; i++)
         {
             string[] row = line[i].Split('\t');
-            itemDataList.Add(new ItemData(row[0], row[1], row[2], row[3], row[4] == "TRUE", int.Parse(row[5])));
+            
+            newList.Add(new ItemData(row[0], row[1], row[2], row[3], row[4] == "TRUE", int.Parse(row[5])));
         }
+        ItemDataList = newList;
     }
 
     [ContextMenu("SaveFile")]
