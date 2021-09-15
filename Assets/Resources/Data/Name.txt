@@ -2,30 +2,10 @@
     "list": [
         {
             "type": "Character",
-            "name": "Bee",
-            "explain": "벌",
-            "number": "1",
-            "isUsing": false
-        },
-        {
-            "type": "Balloon",
-            "name": "GreenBalloon",
-            "explain": "초록풍선",
-            "number": "1",
-            "isUsing": false
-        },
-        {
-            "type": "Balloon",
-            "name": "BlueBalloon",
-            "explain": "파란풍선",
-            "number": "1",
-            "isUsing": false
-        },
-        {
-            "type": "Character",
             "name": "Pig",
             "explain": "돼지",
-            "number": "34",
+            "number": "3",
+            "index": 0,
             "isUsing": false
         },
         {
@@ -33,6 +13,15 @@
             "name": "Creeper",
             "explain": "크리퍼",
             "number": "2",
+            "index": 1,
+            "isUsing": false
+        },
+        {
+            "type": "Character",
+            "name": "Bee",
+            "explain": "벌",
+            "number": "2",
+            "index": 2,
             "isUsing": false
         }
     ]

@@ -18,12 +18,13 @@ public class Serialization<T1>
 public class ItemData
 {
     // 생산자 : 이름이 클래스와 같은 매서드
-    public ItemData(string _type, string _name, string _explain, string _number, bool _isUsing)
+    public ItemData(string _type, string _name, string _explain, string _number, bool _isUsing, int _index)
     {
-        type = _type; name = _name; explain = _explain; number = _number; isUsing = _isUsing;
+        type = _type; name = _name; explain = _explain; number = _number; isUsing = _isUsing; index = _index;
     }
 
     public string type, name, explain, number;
+    public int index;
     public bool isUsing;
 }
 
@@ -47,7 +48,7 @@ public class DataBaseManager : MonoBehaviour
         for (int i = 0; i < line.Length; i++)
         {
             string[] row = line[i].Split('\t');
-            itemDataList.Add(new ItemData(row[0], row[1], row[2], row[3], row[4] == "TRUE"));
+            itemDataList.Add(new ItemData(row[0], row[1], row[2], row[3], row[4] == "TRUE", int.Parse(row[5])));
         }
     }
 
