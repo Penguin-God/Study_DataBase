@@ -78,7 +78,7 @@ public class SlotManager : MonoBehaviour
             slots[i].SetActive(true);
             arr_UsingImage[i].SetActive(currentItemList[i].isUsing);
             slots[i].GetComponentInChildren<Text>().text = currentItemList[i].name;
-            // MyItemList에서 인덱스를 이미지에 해당하는 인덱스를 찾아 MyItemList과 크기가 같은 스프라이트 배열에 대입
+            // MyItemList에서 인덱스를 이미지에 해당하는 인덱스를 찾아 MyItemList와 크기가 같은 스프라이트 배열에 대입
             arr_ItemImage[i].sprite = arr_ItemSprite[DataBaseManager.instance.itemDataList.FindIndex(data => data.name == currentItemList[i].name)];
         }
     }

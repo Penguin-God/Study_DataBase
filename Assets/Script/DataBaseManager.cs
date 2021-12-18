@@ -61,6 +61,7 @@ public class DataBaseManager : MonoBehaviour
             newList.Add(new ItemData(row[0], row[1], row[2], row[3], row[4] == "TRUE", int.Parse(row[5])));
         }
         ItemDataList = newList;
+        MyItemList = new List<ItemData>(ItemDataList);
     }
 
     [ContextMenu("SaveFile")]
