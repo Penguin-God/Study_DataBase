@@ -1,0 +1,35 @@
+1강 : SSMS 입문 
+테이블들은 엑셀의 시트와 같은 느낌. 그냥 데이터들을 분류해놓은 것. 각 데이터마다 자료형을 정해줄 수 있음
+
+
+2강 : SELECT FROM WHERE
+sql 키워드들은 순서대로 줄마다 실행되지 않음. 왜 Why? Because, It is made in america.
+예를 Sql에서 대표적으로 SELECT something FROM file; 같은 문법이 있다.
+영어는 "Bring me a book from the desk." 니까 얼추 순서가 맞는데, 한국은 "책상에서 책 좀 가져다 줘." 라서 한국인은 From부터 시작한다고 보는게 이해하기 편함.
+
+드래그한 부분만 실행되는 미친 기능이 있음.
+
+LIKE : 문자열 패턴 매칭 구문
+% : 문자 개수 상관없음. ex) string LIKE 'New%'; -- New로 시작하는거 다 가져옴. C#의 string.StartWith() 이랑 비슷함.
+_ : 문자 개수 1개. ex) string LIKE 'New Yor_'; ex)  New Yor 다음에 딱 한 글자만 있어야 가져옴.
+대소문자는 구분 안 함. 옵션 있을지도?
+
+
+3강 : ORDER BY
+ORDER BY something; 으로 특정 컬럼을 기준으로 정렬 가능. ORDER BY Year, Month, Day; 등으로 여러 개를 우선 순위를 둬서 정렬 가능.
+ASC가 기본 옵션으로 오름차순. DESC는 내림차순. ASC의 경우 NULL인 데이터가 맨 위로 오는데 그냥 NULL은 빼고 생각하는게 정신건강에 좋음.
+
+SELECT TOP n(정수)로 맨 위에 있는 몇 개만 추출 가능. 상위 랭킹 100등과 주로 ORDER BY와 같이 쓰임.
+
+
+4강 : 수치와 문자열
+사칙연산은 다른 프로그래밍 언어랑 똑같음.
+NULL과 연산을 한다면 결과값은 무조건 NULL임. 문자열 앞에 N을 붙여 N''형식으로 사용하면 유니코드를 뜻하고 이를 통해 한국어 이용 가능.
+
+SELECT는 로드가 아니라 선택. 무슨 말이냐면 SELECT는 결과창에 보이기만 할 뿐 하지 않은 컬럼들도 사용할 수 있음. 지금까지 헷갈려서 적음. 
+Load는 FROM임. FROM 안하면 아무것도 SELECT 못함.
+
+SELECT에서 AS로 자신만의 컬럼을 정의할 수 있는데, FROM이나 WHERE에서는 순서상으로 이를 모르기 때문에(2강 참고) 사용하지 못함.
+특정 컬럼끼리 연산을 한 후 AS를 이용해 결과를 확인할 수 있음. ex) SELECT nameFirst + ' '+ nameLast AS fullName
+
+SUBSTRING 같이 C#에서도 보이는 함수가 있는데 시작 index가 0이 아니라 1임.
