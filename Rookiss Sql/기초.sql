@@ -1,17 +1,29 @@
---ORDER BY 
---SELECT TOP 10 nameFirst, nameLast, birthYear, birthMonth, birthDay
---FROM players WHERE birthYear IS NOT NULL ORDER BY birthYear DESC, birthMonth DESC, birthDay DESC;
+USE BaseballData
 
--- birthCity LIKE 'NEW YOR_'; : LIKE를 이용한 문자열 패턴 매칭.
-
-
--- 연산
-SELECT 2023 - birthYear AS KoearAge 
-FROM players 
-WHERE deathYear IS NULL and birthYear IS NOT NULL AND 2023 - birthYear <= 70
-ORDER BY KoearAge;
-
--- 문자열 연산 예제
-SELECT nameFirst + ' ' + nameLast AS fullName
+SELECT birthMonth,
+	CASE birthMonth
+		WHEN 1 THEN N'겨울'
+		WHEN 2 THEN N'겨울'
+		WHEN 3 THEN N'봄'
+		WHEN 4 THEN N'봄'
+		WHEN 5 THEN N'봄'
+		WHEN 6 THEN N'여름'
+		WHEN 7 THEN N'여름'
+		WHEN 8 THEN N'여름'
+		WHEN 9 THEN N'가을'
+		WHEN 10 THEN N'가을'
+		WHEN 11 THEN N'가을'
+		WHEN 12 THEN N'겨울'
+		ELSE N'몰?루'
+	END AS birthSeason
 FROM players
-WHERE nameFirst IS NOT NULL AND nameLast IS NOT NULL;
+
+SELECT birthMonth,
+	CASE
+		WHEN birthMonth <= 2 THEN N'겨울'
+		WHEN birthMonth <= 5 THEN N'봄'
+		WHEN birthMonth <= 8 THEN N'여름'
+		WHEN birthMonth <= 11 THEN N'가을'
+		ELSE N'몰?루'
+	END AS birthSeason
+FROM players

@@ -4,32 +4,88 @@
 
 2강 : SELECT FROM WHERE
 sql 키워드들은 순서대로 줄마다 실행되지 않음. 왜 Why? Because, It is made in america.
-예를 Sql에서 대표적으로 SELECT something FROM file; 같은 문법이 있다.
+예를 들어, Sql에서 대표적으로 SELECT something FROM file; 같은 문법이 있다.
 영어는 "Bring me a book from the desk." 니까 얼추 순서가 맞는데, 한국은 "책상에서 책 좀 가져다 줘." 라서 한국인은 From부터 시작한다고 보는게 이해하기 편함.
 
 드래그한 부분만 실행되는 미친 기능이 있음.
 
 LIKE : 문자열 패턴 매칭 구문
-% : 문자 개수 상관없음. ex) string LIKE 'New%'; -- New로 시작하는거 다 가져옴. C#의 string.StartWith() 이랑 비슷함.
+% : 문자 개수 상관없음. ex) string LIKE 'New%'; -- New로 시작하는거 다 가져옴. C#의 string.StartWith("New")랑 비슷함.
 _ : 문자 개수 1개. ex) string LIKE 'New Yor_'; ex)  New Yor 다음에 딱 한 글자만 있어야 가져옴.
 대소문자는 구분 안 함. 옵션 있을지도?
 
 
 3강 : ORDER BY
 ORDER BY something; 으로 특정 컬럼을 기준으로 정렬 가능. ORDER BY Year, Month, Day; 등으로 여러 개를 우선 순위를 둬서 정렬 가능.
-ASC가 기본 옵션으로 오름차순. DESC는 내림차순. ASC의 경우 NULL인 데이터가 맨 위로 오는데 그냥 NULL은 빼고 생각하는게 정신건강에 좋음.
+ASC가 기본 옵션으로 오름차순. DESC는 내림차순. ASC의 경우 NULL인 데이터가 맨 위로 오는데 그냥 WHERE로 NULL은 빼고 하는게 정신건강에 좋음.
 
 SELECT TOP n(정수)로 맨 위에 있는 몇 개만 추출 가능. 상위 랭킹 100등과 주로 ORDER BY와 같이 쓰임.
+
+나이 많은 순서대로 정렬한 코드
+SELECT nameFirst, nameLast, birthYear, birthMonth, birthDay
+FROM players 
+WHERE birthYear IS NOT NULL 
+ORDER BY birthYear DESC, birthMonth DESC, birthDay DESC;
 
 
 4강 : 수치와 문자열
 사칙연산은 다른 프로그래밍 언어랑 똑같음.
-NULL과 연산을 한다면 결과값은 무조건 NULL임. 문자열 앞에 N을 붙여 N''형식으로 사용하면 유니코드를 뜻하고 이를 통해 한국어 이용 가능.
+NULL과 연산을 한다면 결과값은 무조건 NULL임. 문자열 앞에 N을 붙여 N'어떤 문자' 형식으로 사용하면 유니코드를 뜻하고 이를 통해 한국어 이용 가능.
 
-SELECT는 로드가 아니라 선택. 무슨 말이냐면 SELECT는 결과창에 보이기만 할 뿐 하지 않은 컬럼들도 사용할 수 있음. 지금까지 헷갈려서 적음. 
-Load는 FROM임. FROM 안하면 아무것도 SELECT 못함.
+SELECT는 로드가 아니라 선택. 무슨 말이냐면 SELECT는 결과창에 보이기만 할 뿐 로드하지 않은 결과창에 띄울 수 있음. Load는 FROM임. FROM 안하면 아무것도 SELECT 못함.
+강의랑 크게 관련 있는 내용은 아닌데 지금까지 헷갈렸어서 적음. 
 
 SELECT에서 AS로 자신만의 컬럼을 정의할 수 있는데, FROM이나 WHERE에서는 순서상으로 이를 모르기 때문에(2강 참고) 사용하지 못함.
 특정 컬럼끼리 연산을 한 후 AS를 이용해 결과를 확인할 수 있음. ex) SELECT nameFirst + ' '+ nameLast AS fullName
 
-SUBSTRING 같이 C#에서도 보이는 함수가 있는데 시작 index가 0이 아니라 1임.
+SUBSTRING 처럼 C#에서도 보이는 함수들이 있는데 시작 index가 0이 아니라 1임.
+
+전체 이름 나타내는 예제 코드
+SELECT nameFirst + ' ' + nameLast AS fullName
+FROM players
+WHERE nameFirst IS NOT NULL AND nameLast IS NOT NULL;
+
+
+5강 : DATETIME
+I. DATETIME 기본
+날짜와 시간을 표현하는 형식인 DATETIME이라는 것이 존재함. 
+CAST('YYYYMMDD HH:MM:SS.nnn' AS DATETIME) 형식으로 문자열을 입력해서 캐스팅이 가능함. (문자열 형식 중 시간 부분은 생략 가능)
+WHERE time 비교, 특정 함수 사용, 데이터 입력 등. 어차피 DATETIME 이라는 것이 확정인 상황이라면 문자열만 넣어도 자동 캐스팅이 되므로 CAST부분을 생략해도 됨.
+
+'WHERE time >= 날짜' 의 형식으로 특정 날짜를 날짜보다 전 혹은 후에 데이터들만 가져올 수 있음.
+
+CURRENT_TIMESTAMP 를 이용하면 내 컴퓨터 기준 현재 시간을 가져올 수 있음.
+GETUTCDATE()을 사용하면 세계 기준 시간으로 관리 가능. 
+서버가 서로 멀리 있거나 성공해서 외국에도 서비스하면 서로 다른 시간을 비교하는게 힘들기 때문에 그럴 때 쓰면 좋음.
+
+II. 여러 함수들
+SELECT DATEADD(부분, 수량, 날짜) : 날짜에 특정 부분을 수량만큼 더함.
+SELECT DATEADD(YEAR, 1, '20000101') : 2000년 1월 1일에 1년 더해서 2001년 1월 1일 됨.
+
+SELECT DATEDIFF(부분, 날짜2, 날짜1) : 특정 부분에 대해 날짜1- 날짜2를 구함
+SELECT DATEDIFF(YEAR, '19000101', '20000101') : 2000년과 1900년을 비교하므로 결과는 2000 - 1900 = 100
+
+SELECT DATEPART(부분, '날짜') : 원하는 부분만 가져옴
+SELECT DATEPART(HOUR, '20000101 01:04:02') : 결과는 1. YEAR(날짜) 형식으로 축약 가능함. 근데 시분초는 안 됨.
+
+
+6강 : CASE
+CASE라고 조건문처럼 쓸 수 있는 친구가 있음. 2가지 형식이 있는데 C#의 switch, if-else랑 굉장히 닮아있음. 그래서 딱히 설명은 안 함.
+
+I. switch 형식
+CASE 변수,
+	WHEN 값 THEN 반환값
+	-- 계속되는 비교
+	ELSE 조건이 전부 다 불일치 할 시 반환값
+END
+
+ELSE는 생략 시 NULL이 반환됨.
+
+II. if-else 형식
+CASE
+	WHEN 조건 THEN 반환값
+	-- 계속되는 비교
+	ELSE 조건이 전부 다 불일치 할 시 반환값
+END
+
+
