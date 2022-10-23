@@ -7,19 +7,24 @@ sql 키워드들은 순서대로 줄마다 실행되지 않음. 왜 Why? Because
 예를 들어, Sql에서 대표적으로 SELECT something FROM file; 같은 문법이 있다.
 영어는 "Bring me a book from the desk." 니까 얼추 순서가 맞는데, 한국은 "책상에서 책 좀 가져다 줘." 라서 한국인은 From부터 시작한다고 보는게 이해하기 편함.
 
+I. FROM : 원하는 파일 로드
+II. SELECT : 원하는 정보 출력
+III. WHERE : 원하는 조건에 맞는 테이블만 가져옴.
+코드는 SELECT -> FROM -> WHERE 순으로 작성함. 하지만 로직은 FROM -> WHERE -> SELECT 순으로 실행됨. FROM을 하지 않으면 데이터 로드를 안 한 것으므로 아무것도 못 함.
+
 드래그한 부분만 실행되는 미친 기능이 있음.
 
 LIKE : 문자열 패턴 매칭 구문
 % : 문자 개수 상관없음. ex) string LIKE 'New%'; -- New로 시작하는거 다 가져옴. C#의 string.StartWith("New")랑 비슷함.
 _ : 문자 개수 1개. ex) string LIKE 'New Yor_'; ex)  New Yor 다음에 딱 한 글자만 있어야 가져옴.
-대소문자는 구분 안 함. 옵션 있을지도?
+대소문자는 구분 안 함. 따로 옵션 있을지도?
 
 
 3강 : ORDER BY
 ORDER BY something; 으로 특정 컬럼을 기준으로 정렬 가능. ORDER BY Year, Month, Day; 등으로 여러 개를 우선 순위를 둬서 정렬 가능.
 ASC가 기본 옵션으로 오름차순. DESC는 내림차순. ASC의 경우 NULL인 데이터가 맨 위로 오는데 그냥 WHERE로 NULL은 빼고 하는게 정신건강에 좋음.
 
-SELECT TOP n(정수)로 맨 위에 있는 몇 개만 추출 가능. 상위 랭킹 100등과 주로 ORDER BY와 같이 쓰임.
+SELECT TOP n(정수)로 맨 위에 있는 몇 개만 추출 가능. 상위 랭킹 100등 출력하는 것과 같이, 주로 ORDER BY와 같이 쓰임.
 
 나이 많은 순서대로 정렬한 코드
 SELECT nameFirst, nameLast, birthYear, birthMonth, birthDay
@@ -30,10 +35,8 @@ ORDER BY birthYear DESC, birthMonth DESC, birthDay DESC;
 
 4강 : 수치와 문자열
 사칙연산은 다른 프로그래밍 언어랑 똑같음.
-NULL과 연산을 한다면 결과값은 무조건 NULL임. 문자열 앞에 N을 붙여 N'어떤 문자' 형식으로 사용하면 유니코드를 뜻하고 이를 통해 한국어 이용 가능.
-
-SELECT는 로드가 아니라 선택. 무슨 말이냐면 SELECT는 결과창에 보이기만 할 뿐 로드하지 않은 결과창에 띄울 수 있음. Load는 FROM임. FROM 안하면 아무것도 SELECT 못함.
-강의랑 크게 관련 있는 내용은 아닌데 지금까지 헷갈렸어서 적음. 
+NULL과 연산을 한다면 결과값은 무조건 NULL임. 
+문자열 앞에 N을 붙여 N'어떤 문자' 형식으로 사용하면 유니코드를 뜻하고 이를 통해 한국어 이용 가능.
 
 SELECT에서 AS로 자신만의 컬럼을 정의할 수 있는데, FROM이나 WHERE에서는 순서상으로 이를 모르기 때문에(2강 참고) 사용하지 못함.
 특정 컬럼끼리 연산을 한 후 AS를 이용해 결과를 확인할 수 있음. ex) SELECT nameFirst + ' '+ nameLast AS fullName
@@ -62,7 +65,7 @@ II. 여러 함수들
 SELECT DATEADD(부분, 수량, 날짜) : 날짜에 특정 부분을 수량만큼 더함.
 SELECT DATEADD(YEAR, 1, '20000101') : 2000년 1월 1일에 1년 더해서 2001년 1월 1일 됨.
 
-SELECT DATEDIFF(부분, 날짜2, 날짜1) : 특정 부분에 대해 날짜1- 날짜2를 구함
+SELECT DATEDIFF(부분, 날짜2, 날짜1) : 특정 부분에 대해 날짜1- 날짜2. 즉 차이를 구함
 SELECT DATEDIFF(YEAR, '19000101', '20000101') : 2000년과 1900년을 비교하므로 결과는 2000 - 1900 = 100
 
 SELECT DATEPART(부분, '날짜') : 원하는 부분만 가져옴
@@ -76,7 +79,7 @@ I. switch 형식
 CASE 변수,
 	WHEN 값 THEN 반환값
 	-- 계속되는 비교
-	ELSE 조건이 전부 다 불일치 할 시 반환값
+	ELSE 반환값
 END
 
 ELSE는 생략 시 NULL이 반환됨.
@@ -85,7 +88,30 @@ II. if-else 형식
 CASE
 	WHEN 조건 THEN 반환값
 	-- 계속되는 비교
-	ELSE 조건이 전부 다 불일치 할 시 반환값
+	ELSE 반환값
 END
+
+
+7강 : 집계 함수
+I. COUNT : 행의 개수 가져옴. NULL은 무시. 애초에 모든 집계 함수들은 NULL을 무시함.
+II. DISTINCT(별개의, 뚜렷한) : 중복 제거. 여러 개의 요소 조합 가능. 예를 들어 'DISTINCT birthYear'는 태어난 년도만 똑같으면 중복 판정이지만 'DISTINCT birthYear, birthMonth, birthDay'는 생년월일 다 똑같아야 중복으로 인정됨.
+III. SUM, AVG, MIN, MAX : 인자값으로 행 이름 넣어서 사용. 어떤 결과를 뱉을지는 관상만 봐도 알 수 있으니 패스.
+MIN, MAX는 딱 같만 출력하기 때문에 전체 정보를 가져오고 싶으면 ORDER BY랑 TOP을 조합해서 써야 됨.
+
+CASE문을 이용해서 NULL이면 0으로 처리하는 코드
+AVG(CASE WHEN weight IS NULL THEN 0 ELSE whight END)
+
+
+8강 : 연습 문제
+특정 값(홈런, 랭킹 등등)이 가장 높은 사람의 정보를 출력하고 싶다면 MAX()를 쓰는게 아니라 ORDER BY랑 TOP을 연계해서 쓰면 됨.
+
+보스턴 팀 소속 중 가장 홈런 많이 친 사람 정보 출력하는 코드
+SELECT TOP(1) *
+FROM batting
+WHERE teamID = 'BOS'
+ORDER BY HR DESC
+
+
+
 
 
