@@ -1,28 +1,16 @@
--- CREATE DATABASE GameDB;
+USE BaseballData
 
-CREATE TABLE accounts(
-	accountID INTEGER NOT NULL,
-	accountName VARCHAR(10) NOT NULL,
-	coins INTEGER DEFAULT 0,
-	createTime DATETIME
-);
+DECLARE @testTable TABLE
+(
+	name VARCHAR(50) NOT NULL,
+	salary INT NOT NULL
+)
+
+INSERT INTO @testTable
+SELECT pl.nameFirst + ' ' + pl.nameLast, sa.salary
+FROM players AS pl
+	INNER JOIN salaries AS sa
+	ON pl.playerID = sa.playerID
 
 SELECT *
-FROM accounts;
-
-DROP TABLE accounts
-
-ALTER TABLE accounts
-ADD lastEnterTime DATETIME;
-
-ALTER TABLE accounts
-DROP COLUMN lastEnterTime;
-
-ALTER TABLE accounts
-ALTER COLUMN accountName VARCHAR(20) NOT NULL;
-
-ALTER TABLE accounts
-ADD CONSTRAINT TT PRIMARY KEY (accountID)
-
-ALTER TABLE accounts
-DROP CONSTRAINT TT
+FROM @testTable

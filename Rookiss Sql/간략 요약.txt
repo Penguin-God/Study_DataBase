@@ -240,7 +240,7 @@ C#에서는 중첩 클래스를 일반 자료형 변수처럼 한 줄에 들고 
 이때, 어떤 플레이어가 아이템을 소유하고 있는지는 알아야 하므로 플레이어의 고유 ID정보를 들고 있고 이를 이용해 주인님을 찾음.
 
 
-14 : 인덱스
+14강 : 인덱스
 I. 개념 : 특정 데이터를 빠르게 찾기 위한 것. 책 후반에 있는 키워드 색인과 유사함. 주로 이진 검색 트리를 사용.
 
 II. CLUSTERED INDEX vs NON-CLUSTERED INDEX
@@ -250,11 +250,115 @@ A : 위에서 책 뒤에 나오는 키워드 색인 예시를 들었는데, 사�
 색인창에서 어디에 있는지에 대한 힌트를 찾고 데이터에 접근하는게 아니라 그냥 바로 접근하니까 더 빠름. 근데 ㄱㄴㄷ처럼 절대적인 정렬 기준은 하나밖에 존재할 수 없기에 딱 하나의 컬럼에만 적용 가능.
 
 기본적으로 모든 데이터를 대상으로 비교를 해야 할 경우가 있는 컬럼에는 NON이든 아니든, 무조건 INDEX를 걸어주는 게 좋음. 
-대표적으로 닉네임 중복 처리를 할 때마다 수천만개의 닉네임을 일일이 비교하면 게임이 다운될 확률이 높기 때문.
+대표적으로 닉네임 중복 처리를 할 때마다 수천만개의 닉네임을 일일이 비교하면 게임이 운명할 것이기 때문.
 
 II. INDEX 생성 및 삭제 (여기서 다루는 건 NON-CLUSTERED INDEX)
 생성 : CREATE INDEX 키 이름 ON 테이블명(컬럼명)
 삭제 : DROP INDEX 테이블이름.키 이름
 UNIQUE : INDEX 걸 때 넣을 수 있는 옵션. 이름만 봐도 알 수 있듯이 데이터 중복을 막아 줌.
+
+
+15강 : UNION
+테이블끼리 교집합, 합집합, 차집합을 구할 때 쓰는 문법들을 알아보는 시간.
+
+I. 사용법
+SELECT playerID
+FROM a
+어쩌구 저쩌구
+
+집합 키워드 -- SELECT로 추출한 2개의 데이터 사이에 구문을 넣음
+
+SELECT playerID
+FROM b
+어쩌구 저쩌구
+
+II. 키워드
+UNION : 교집합 (기본적으로 중복 제거함. ALL 붙이면 허용)
+INTERSECT : 합집합
+EXCEPT : 차집합( 앞에거 중에 뒤에거랑 중복되는게 있으면 제거)
+
+
+16강 : JOIN
+I. 개념 : UNION이 두 데이터를 새로로 합친다면 JOIN은 가로로 합침. 정규화 할 때 나눈 데이터를 다시 합치는 느낌.
+
+II. INNER JOIN
+"INNER JOIN table ON 조건" 의 형식으로 사용. 조건이 일치하면 합침.
+
+사용 예시
+SELECT *
+FROM players AS pl
+	INNER JOIN salaries AS sa
+	ON pl.playerID = sa.playerID
+AS로 별칭을 붙이는 이유는 둘 가 playerID라는 똑같은 이름의 컬럼을 갖고 있으니 서로 구분해주기 위함.
+위 코드를 실행하면 기존 player정보에 연봉 정보가 맨 뒤에 추가됨.
+
+III. LEFT/RIGHT JOIN
+LEFT : 문법은 INNER JOIN하고 똑같음. 벗 조건이 일치하지 않더라도, 왼쪽에 정보가 있으면 일단 무조건 표시함. 그리고 조건을 만족하지 않는다면 오른쪽을 NULL로 밀어버림.
+RIGHT : LEFT랑 방향만 반대고 그냥 똑같음.
+
+
+17강 : TRANSACTION
+개념 : 아이템 교환이나, 강화 등 굉장히 중요한 작업들의 원자성을 지켜주는 기능.
+COMMIT : 테이블에 작업을 적용하는 것. 기본적으로 INSERT 등 문법에 기본 옵션으로 달려 있음.
+ROLLBACK : 이전에 하던 작업들을 취소.
+
+사용 예시
+BEGIN TRY
+	BEGIN TRAN -- 내부 작업들 중 하나라도 Crash가 나면 CATCH로 들어가게 되고 ROLLBACK이 실행되어 이전에 완료되었던 작업들도 모두 취소됨.
+		작업 1
+		작업 2
+		작업 3 
+	COMMIT
+END TRY
+
+BEGIN CATCH
+	IF @@TRANCOUNT > 0 -- 현재 활성화된 트랙잭션 수가 0보다 크다면
+		ROLLBACK
+END CATCH
+
+트랙잭션은 내부적으로 lock을 거는 것과 굉장히 유사하기 때문에 트랜잭션 안에 작업이 실행되는 동안에는 다른 곳에서 접근을 못 함.
+그렇기에 너무 오래 걸리는 작업을 넣으면 지연이 생길 수 있으므로 진짜로 원자적으로 실행되어야 하는 작업만 넣어야 함.
+
+
+17강 : 변수와 흐름 제어
+Shift + Tab 단축키로 탭을 당길 수 있다.
+
+I. 변수
+선언 : DECLARE 변수 이름 AS 타입. (declare : 선언하다)
+대입 : SET 변수 이름 = 값
+
+사용 예시 : 가장 연봉 높은 선수의 이름 저장
+SELECT TOP 1 @firstName = p.firstName, @lastName = p.lastName
+FROM players AS pl
+	INNER JOIN salaries AS sa
+	ON pl.playerID = sa.playerID
+ORDER BY salary DESC
+
+SELECT @firstName, @lastName -- 변수 출력
+
+II. bacth : GO로 코드를 블록으로 나눌 수 있음. 서로 다른 영역에 있으면 변수명 겹쳐도 되는 등, C#의 {}랑 비슷한데, 다른 블록에서 크래쉬가 나도 멈추지 않는다는 차이점이 있음.
+
+III. IF : C#등 여러 언어에서 나오는 그 IF임. 다만 {}대신 BEGIN과 END 사용. 한 줄만 실행할거면 생략 가능.
+
+IV. WHILE : 이것 역시 내가 알고 있는 그거임. BREAK랑 CONTINUE도 있음. 이것도 {}는 BEGIN, END로 대체.
+
+V. 테이블 변수 : 임시로 사용할 테이블을 변수에 담을 수 있음. 이번 강의에서는 이게 제일 중요함.
+
+DECLARE 테이블 이름 TABLE(테이블 양식) -- 임시 테이블 선언
+
+-- INSERT 등 여러 작업
+
+SELECT * -- 임시 테이블 출력
+FROM 테이블 명
+
+-- 임시 테이블은 temp table이라는 곳에 있다가 다 실행되면 삭제됨.
+
+
+
+
+
+
+
+
 
 
