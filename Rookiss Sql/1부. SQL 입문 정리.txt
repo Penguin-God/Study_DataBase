@@ -1,15 +1,16 @@
 1강 : SSMS 입문 
-테이블들은 엑셀의 시트와 같은 느낌. 그냥 데이터들을 분류해놓은 것. 각 데이터마다 자료형을 정해줄 수 있음
+테이블들은 엑셀의 시트와 같은 느낌. 그냥 데이터들을 분류해놓은 것. 
+각 데이터마다 자료형을 정해줄 수 있음
 
 
 2강 : SELECT FROM WHERE
 sql 키워드들은 순서대로 줄마다 실행되지 않음. 왜 Why? Because, It is made in america.
-예를 들어, Sql에서 대표적으로 SELECT something FROM file; 같은 문법이 있다.
+예를 들어, Sql에서 대표적으로 SELECT * FROM file; 같은 문법이 있다.
 영어는 "Bring me a book from the desk." 니까 얼추 순서가 맞는데, 한국은 "책상에서 책 좀 가져다 줘." 라서 한국인은 From부터 시작한다고 보는게 이해하기 편함.
 
-I. FROM : 원하는 파일 로드
-II. SELECT : 출력을 하고자 하는 정보를 선택 및 추출
-III. WHERE : 원하는 조건에 맞는 테이블만 가져옴.
+FROM : 원하는 파일 로드
+SELECT : 출력을 하고자 하는 정보를 선택 및 추출
+WHERE : 원하는 조건에 맞는 테이블만 가져옴.
 코드는 SELECT -> FROM -> WHERE 순으로 작성함. 하지만 로직은 FROM -> WHERE -> SELECT 순으로 실행됨. FROM을 하지 않으면 데이터 로드를 안 한 것으므로 아무것도 못 함.
 
 드래그한 부분만 실행되는 미친 기능이 있음.
@@ -38,7 +39,7 @@ ORDER BY birthYear DESC, birthMonth DESC, birthDay DESC;
 NULL과 연산을 한다면 결과값은 무조건 NULL임. 
 문자열 앞에 N을 붙여 N'어떤 문자' 형식으로 사용하면 유니코드를 뜻하고 이를 통해 한국어 이용 가능.
 
-SELECT에서 AS로 자신만의 컬럼을 정의할 수 있는데, FROM이나 WHERE에서는 순서상으로 이를 모르기 때문에(2강 참고) 사용하지 못함.
+SELECT에서 AS로 자신만의 컬럼을 정의할 수 있는데, FROM이나 WHERE에서는 순서상 이를 모르기 때문에(2강 참고) 사용하지 못함.
 특정 컬럼끼리 연산을 한 후 AS를 이용해 결과를 확인할 수 있음. ex) SELECT nameFirst + ' '+ nameLast AS fullName
 
 SUBSTRING 처럼 C#에서도 보이는 함수들이 있는데 시작 index가 0이 아니라 1임.
@@ -82,7 +83,7 @@ CASE 변수,
 	ELSE 반환값
 END
 
-ELSE는 생략 시 NULL이 반환됨.
+ELSE는 반환값 생략 시 NULL이 반환됨.
 
 II. if-else 형식
 CASE
@@ -96,9 +97,9 @@ END
 I. COUNT : 행의 개수 가져옴. NULL은 무시. 애초에 모든 집계 함수들은 NULL을 무시함.
 II. DISTINCT(별개의, 뚜렷한) : 중복 제거. 여러 개의 요소 조합 가능. 예를 들어 'DISTINCT birthYear'는 태어난 년도만 똑같으면 중복 판정이지만 'DISTINCT birthYear, birthMonth, birthDay'는 생년월일 다 똑같아야 중복으로 인정됨.
 III. SUM, AVG, MIN, MAX : 인자값으로 행 이름 넣어서 사용. 어떤 결과를 뱉을지는 관상만 봐도 알 수 있으니 패스.
-MIN, MAX는 딱 같만 출력하기 때문에 전체 정보를 가져오고 싶으면 ORDER BY랑 TOP을 조합해서 써야 됨.
+집계함수는 딱 값만 출력하기 때문에 전체 정보를 가져오고 싶으면 다른 방식을 써야 함.
 
-CASE문을 이용해서 NULL이면 0으로 처리하는 코드
+CASE문을 이용해서 NULL이면 0으로 처리한 후 평균을 구하는 코드
 AVG(CASE WHEN weight IS NULL THEN 0 ELSE whight END)
 
 
@@ -116,17 +117,18 @@ ORDER BY HR DESC
 I. GROUP BY
 GROUP BY : 특정 행에 중복된 정보들을 하나로 합쳐서 보는 것.
 , 를 이용하여 2개 이상의 정보를 묶을 수 있음. ex) 년도와 팀 이름별로 묶기.
-이때 정보를 합치는 개념이므로 SELECT에서는 GROUP BY로 묶은 정보만 접근 가능하며, 특정 개별 정보에는 접근할 수 없음. 하지만 집계 함수들은 사용 가능. ex) 선수들을 팀명을 기준으로 묶으면 특정 선수의 이름에는 접근 불가. 다만 특정 팀에 몇 명의 선수가 있는지는 COUNT로, 모든 선수들의 몸무게 합은 SUM으로 구할 수 있음.
+이때 정보를 합치는 개념이므로 SELECT에서는 GROUP BY로 묶은 정보만 접근 가능하며, 특정 개별 정보에는 접근할 수 없음. 하지만 집계 함수들은 사용 가능. 
+ex) 선수들을 팀명을 기준으로 묶으면 특정 선수의 이름에는 접근 불가. 다만 특정 팀에 몇 명의 선수가 있는지는 COUNT로, 모든 선수들의 몸무게 합은 SUM으로 구할 수 있음.
 
 II. HAVING
-이제 GROUP BY를 써서 "2021년에 연봉이 제일 높은 팀 순서대로 나열. 이때 총 연봉이 10억 이하인 팀 제외" 같은 기능을 구현할 수 있는데 이때 문제가 하나 있다.
+이제 GROUP BY를 써서 "2021년에 총 연봉이 제일 높은 팀 순서로 나열. 이때 총 연봉이 10억 이하인 팀 제외" 같은 기능을 구현할 수 있는데 이때 문제가 하나 있다.
 일단 지금까지 배운 문법으로 코드를 짜면 아마 이럴 것이다.
 
 SELECT SUM(Salary) AS allSalary
-FROM progamers
+FROM progamerDatas
 WHERE year = 2021 AND allSalary > 1000000000 -- 여기서 크래쉬 남
-GROUP BY name
-ORDER BY allSalary
+GROUP BY teamName
+ORDER BY allSalary DESC
 
 기존의 방식대로 코드를 짜다 보면 문제가 하나 생긴다. WHERE은 로직 상으로는 SELECT와 GROUP BY 전에 실행되므로 allSalary라는 키워드에 접근하지 못한다. 따라서 10억 이하 제외라는 필터링을 걸 수가 없다.
 이를 해결하기 위해 있는 문법이 HAVING 이다.
@@ -135,11 +137,11 @@ HAVING : GROUP BY 다음에 조건을 걸 수 있는 문법
 사용 예시를 한 번 봐보자.
 
 SELECT SUM(Salary) AS allSalary
-FROM progamers
+FROM progamerDatas
 WHERE yearID = 2021
-GROUP BY name
+GROUP BY teamName
 HAVING SUM(Salary) > 1000000000 -- 추가된 HAVING문
-ORDER BY allSalary
+ORDER BY allSalary DESC
 
 이때 HAVING에서도 SELECT에는 접근하지 못하므로 allSalary가 아닌 SUM(Salary)을 이용해서 비교해야 한다.
 
@@ -175,10 +177,10 @@ SET 에서는 ,를 이용해서 여러 개의 값을 한 번에 바꿀 수 있�
 11강 : SUBQUERY
 I. SUBQUERY
 현재까지의 문법이 아쉬운 것은 하나의 테이블 내에서만 작업을 하고 있다는 것.
-만약 역대 연봉 1위인 사람의 개인정보를 알고 싶다면 어떨까? 연봉과 개인정보 테이블은 각각 구분되어 있어서 한 번에는 하지 못함. 결국 연봉 1위를 찾고 그 정보를 기준으로 공용 식별 ID를 개인정보 테이블에서 찾아야 됨.
+만약 역대 단일 연봉 1위인 사람의 개인정보를 알고 싶다면 어떨까? 연봉과 개인정보 테이블은 각각 구분되어 있어서 한 번에는 하지 못함. 결국 연봉 1위를 찾고 그 정보를 기준으로 공용 식별 ID를 개인정보 테이블에서 찾아야 됨.
 이럴 때 쓰는게 SUBQUERY(서브 쿼리)이고, 그냥 기존 명령문 중간에 SELECT를 한 번 더 쓰는 느낌임.
 
-단일 예시 코드
+역대 단일 연봉 1위인 사람의 정보 가져오는 코드
 SELECT *
 FROM players
 WHERE playerID = (SELECT TOP (1) playerID FROM salaries ORDER BY salary DESC)
@@ -186,10 +188,10 @@ WHERE playerID = (SELECT TOP (1) playerID FROM salaries ORDER BY salary DESC)
 playerID를 가장 연봉이 높은 선수의 것을 가져와서 SELECT 함. 이때 서브쿼리는 무조건 () 안에 작성해야 함.
 
 만약 데이터가 여러개라면?
-위에서는 단 한명이었지만 상위 20위의 데이터를 가져오고 싶을때는 어떨까? 그냥 TOP20만 쓰면 될까? 답은 NO임
+위에서는 단 한명이었지만 상위 20위의 데이터를 가져오고 싶을때는 어떨까? 그냥 TOP20()을 쓰면 될까? 답은 NO임
 페이커처럼 년도별로 연봉 기록을 갱신하는 선수가 상위권에 중복될 수 있다. 근데, playerID는 고유 값인데 이게 중복되는데 말이 되는가?
-이런 문제 때문에 여러 개의 데이터를 return하면 애초에 =을 못 씀. 대신 IN을 쓰면 됨. return 된 얘들 중에 나한테 있는지 없는지만 따지는 느낌임. 나한테 있으면 가져오고, 아니면 말고.
-다중 예시 코드
+이런 문제 때문에 여러 개의 데이터를 return하면 애초에 = 을 못 씀. 대신 IN을 쓰면 됨. return 된 얘들 중에 나한테 있는지 없는지만 따지는 느낌임. 나한테 있으면 가져오고, 아니면 말고.
+역대 단일 연봉 20위 안에 드는 사람들의 정보를 중복 제거한 후 가져오는 코드
 SELECT *
 FROM players
 WHERE playerID IN (SELECT TOP (20) playerID FROM salaries ORDER BY salary DESC) -- = 에서 IN으로 바뀜
@@ -197,12 +199,12 @@ WHERE playerID IN (SELECT TOP (20) playerID FROM salaries ORDER BY salary DESC) 
 SUBQUERY는 WHERE에서 가장 많이 쓰기는 하지만 하드 코딩한 값 대신이라면 어디든지 들어갈 수 있음. 또한, 꼭 SELECT안에 SELECT를 쓰는게 아니라 INSERT같은 문법에도 사용 가능함.
 
 II. INSERT SELECT
-서브쿼리랑은 다른 개념이기는 하지만 INSERT할 때 VALUES대신에 SELECT라는 키워드를 쓸 수 있음.
+서브쿼리랑은 다른 개념이기는 하지만 INSERT할 때 VALUES대신에 SELECT 키워드를 쓸 수 있음.
 사용 방식은 VALUES랑 거의 똑같은데 좀 더 대량의 정보를 넣을 때 유용함.
 대표적으로 기존에 있던 테이블에서 데이터를 긁어오고 싶을 때 사용 가능.
 INSERT INTO
 SELECT id, name FROM data; 
-같은 형식으로 기존에 있던 id나 이름을 죄다 넣을 수 있음.
+다른 테이블에 이미 존재하는 id나 이름을 죄다 넣을 수 있음.
 
 III. 상관 관계 서브쿼리
 어렵고 복잡해보이지만 일단 알아야 되는 문법. 지금 당장은 알고 있기만 해도 됨.
@@ -247,7 +249,10 @@ II. CLUSTERED INDEX vs NON-CLUSTERED INDEX
 CLUSTERED INDEX = PRINARY KEY : 제일 좋고 빠르다. 하지만 테이블 당 하나만 존재 가능.
 Q : 아니 제일 빠르고 좋은데 왜 하나만 있나요?
 A : 위에서 책 뒤에 나오는 키워드 색인 예시를 들었는데, 사실 얘는 사전에 가까움. 사전은 ㄱㄴㄷ순서로 이미 정렬이 되어 있지 않음? 그거임.
-색인창에서 어디에 있는지에 대한 힌트를 찾고 데이터에 접근하는게 아니라 그냥 바로 접근하니까 더 빠름. 근데 ㄱㄴㄷ처럼 절대적인 정렬 기준은 하나밖에 존재할 수 없기에 딱 하나의 컬럼에만 적용 가능.
+
+NON-CLUSTERED는 색인창처럼 관련 정보를 따로 만들고, 그 힌트를 바탕으로 데이터에 접근함.
+근데  CLUSTERED는 애초에 ID 순서처럼 이미 정렬이 되 있음. 
+ㄱㄴㄷ처럼 절대적인 정렬 기준은 하나밖에 존재할 수 없음. ID 순서랑 닉네임 두 가지 기준을 가지고 정렬할 수는 없고, 가장 우선시되는 기준이 있어야 데이터를 특정 순서대로 정렬할 수 있기 때문.
 
 기본적으로 모든 데이터를 대상으로 비교를 해야 할 경우가 있는 컬럼에는 NON이든 아니든, 무조건 INDEX를 걸어주는 게 좋음. 
 대표적으로 닉네임 중복 처리를 할 때마다 수천만개의 닉네임을 일일이 비교하면 게임이 운명할 것이기 때문.
@@ -279,7 +284,7 @@ EXCEPT : 차집합( 앞에거 중에 뒤에거랑 중복되는게 있으면 제�
 
 
 16강 : JOIN
-I. 개념 : UNION이 두 데이터를 새로로 합친다면 JOIN은 가로로 합침. 정규화 할 때 나눈 데이터를 다시 합치는 느낌.
+I. 개념 : UNION이 두 데이터를 세로로 합친다면 JOIN은 가로로 합침. 정규화 할 때 나눈 데이터를 다시 합치는 느낌.
 
 II. INNER JOIN
 "INNER JOIN table ON 조건" 의 형식으로 사용. 조건이 일치하면 합침.
@@ -349,7 +354,7 @@ DECLARE 테이블 이름 TABLE(테이블 양식) -- 임시 테이블 선언
 -- INSERT 등 여러 작업
 
 SELECT * -- 임시 테이블 출력
-FROM 테이블 명
+FROM 테이블 이름
 
 -- 임시 테이블은 temp table이라는 곳에 있다가 다 실행되면 삭제됨.
 
@@ -360,7 +365,7 @@ II. 사용법 : 함수명() OVER ([PARTITION BY] [ORDER BY] [ROWS]) -- ORDER BY�
 PARTITION BY : GROUP BY와 비슷. 하지만 정보를 하나로 합치지 않고, 정보를 날리지도 않음
 ORDER BY : 그냥 원래 쓰던 방식이랑 똑같음. 어떻게 정렬할 것인가.
 ROW : 범위
-사용하면 함수에 따른 새로운 정보를 담고 있는 컬럼이 생김. RANK()는 랭킹 정보를 가진 컬럼을 추가로 뒤에 붙임.
+사용하면 함수에 따라서 새로운 정보를 담고 있는 컬럼이 생김. RANK()는 랭킹 정보를 가진 컬럼을 추가로 뒤에 붙임.
 
 선수가 가장 연봉을 많이 받았던 년도 순으로 정렬하는 코드
 SELECT *,

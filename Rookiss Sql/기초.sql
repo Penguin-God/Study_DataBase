@@ -1,6 +1,5 @@
 USE BaseballData
 
-SELECT *,
-	RANK() OVER (PARTITION BY playerID ORDER BY salary DESC)
-FROM salaries 
-ORDER BY playerID
+SELECT *
+FROM players
+WHERE playerID IN (SELECT TOP (20) playerID FROM salaries ORDER BY salary DESC)
