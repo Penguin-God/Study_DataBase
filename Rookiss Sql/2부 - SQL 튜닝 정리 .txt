@@ -1,0 +1,39 @@
+1강 : 인덱스 분석
+찾고 싶은 데이터를 받음 => Tree를 거쳐 HEAP RID를 보유한 페이지를 찾음 => RID를 이용해 데이터를 보유한 페이지를 찾음 => RID를 이용해 테이블에서 행의 정보를 가져옴.
+Random Access : 데이터 한 건을 읽기 위해 한 페이지씩 접근
+Bookmark Lookup : RID를 통해 행을 찾는 것.
+
+
+2강 : 복합 인덱스
+개념 : 두 개 이상의 컬럼을 묶어서 인덱스를 거는 것.
+복합 인덱스를 사용하면 가장 처음에 온 대장님은 개별로도 인덱스가 적용됨. 
+하지만 뒤에 오는 찌끄레기들은 대장님 먼저 확인 후 나온 정보가 둘 이상이면 그제야 사용하는 얘들이기 때문에 애초에 대장님이 없으면 작동을 못 함. 따라서 뒤에 얘들은 독립적으로는 INDEX가 적용이 안 됨.
+따라서 인덱스 (A, B)를 사용 중이라면 인덱스 A를 따로 걸 필요는 없음. 하지만, B는 따로 걸어줘야 함.
+
+Crtl + L : DB가 어떻게 동작하는지 알려줌
+INDEX SCAN : BAD(느리다)
+INDEX SEEK : GOOD(빠르다)
+인덱스는 데이터 추가로 인해 페이지에 공간이 다 차면 분할을 함.
+SUBSTRING() 등으로 INDEX가 걸린 컬럼을 사용하면 SEEK가 아니라 SCAN이 뜰 때도 있음. 이럴 때는 다른 방법을 사용해야 함. 따라서 KEY를 가공할 때 주의해야 함.
+
+
+3강 : Clustered vs NonClustered
+Clustered : 실제로 데이터가 저장되는 순서에 영향을 줌. Leaf Page(가장 밑에 있는 트리)는 실제로 데이터가 저장되 있는 Data Page가 됨.
+
+		root1
+page1	page2	page3	page4	page5
+
+위의 형식으로 데이터들이 저장되어 있을 경우,  root1에 내가 찾고 있는 데이터가 어느 페이지에 있는지 물어봄. 그 다음 페이지에 접근. 이때 page는 실제로 데이터를 들고 있는 페이지이므로 거기서 끝. 2번 읽음
+
+
+NonClustered : Clustered Index의 여부에 따라서 다르게 동작함
+Clustered 가 있을 때 : Heap Table이 없음. Leaf Table에 실제 데이터가 존재. Heap RID 대신 Clustered의 키 값을 가지고 있음. 데이터를 찾을 때 키를 찾은 후 값을 가지고 Clustered의 페이지로 가서 데이터를 찾음. 4번 읽음
+Clustered 가 없을 때 : 데이터가 Heap Table에 저장됨. RID를 이용해 Heap Table에 접근해 데이터를 추출함. 3번 읽음.
+
+
+4강 : Index Scan vs Index Seek
+Index Scan : 
+Index Seek : 
+
+SET STATISTICS TIME ON : 경과 시간
+SET STATISTICS IO ON : 데이터를 찾기 위해 읽은 페이지 수
